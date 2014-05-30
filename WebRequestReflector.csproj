@@ -155,6 +155,7 @@
     <Compile Include="Models\BucketEntry.cs" />
     <Compile Include="Models\BucketManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UnityResolver.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
