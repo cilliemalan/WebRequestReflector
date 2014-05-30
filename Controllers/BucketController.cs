@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using WebRequestReflector.Models;
 
@@ -26,37 +27,65 @@ namespace WebRequestReflector.Controllers
         [HttpPatch]
         [HttpPost]
         [HttpPut]
-        public new HttpResponseMessage Request(string bucket, [FromBody]dynamic @object)
+        public async new Task<BucketEntrySummary> Request(string bucket)
         {
-            return new HttpResponseMessage(HttpStatusCode.OK);
+            var bkt = GetBucket(bucket);
+
+            BucketEntry newEntry = new BucketEntry
+            {
+                Contents = await base.Request.Content.ReadAsStringAsync(),
+                Headers = base.Request.Headers,
+                DateAdded = DateTimeOffset.Now,
+                Method = base.Request.Method
+            };
+
+            bkt.Entries.Add(newEntry);
+
+            _bucketManager.Update(bkt);
+
+            return new BucketEntrySummary(bkt.Entries.Count - 1, newEntry);
         }
 
         [Route("{bucket:length(16)}/get")]
         [HttpGet]
-        public object GetAll(string bucket)
+        public BucketSummary GetAll(string bucket)
         {
-            return new HttpResponseMessage(HttpStatusCode.OK);
+            var bkt = GetBucket(bucket);
+
+            return new BucketSummary(bkt);
         }
 
         [Route("{bucket:length(16)}/get/{index:int}")]
         [HttpGet]
-        public object Get(string bucket, int index)
+        public BucketEntry Get(string bucket, int index)
         {
-            return new HttpResponseMessage(HttpStatusCode.OK);
+            var bkt = GetBucket(bucket);
+            if (index < 0 || index >= bkt.Entries.Count) throw new ArgumentOutOfRangeException("index");
+            return bkt.Entries[index];
         }
 
         [Route("{bucket:length(16)}/delete")]
         [HttpPost]
-        public HttpResponseMessage Delete(string bucket)
+        public void Delete(string bucket)
         {
-            return new HttpResponseMessage(HttpStatusCode.OK);
+            var bkt = GetBucket(bucket);
+            _bucketManager.Delete(bucket);
         }
 
         [Route("create")]
         [HttpPost]
-        public HttpResponseMessage Create()
+        public BucketSummary Create()
         {
-            return new HttpResponseMessage(HttpStatusCode.OK);
+            return new BucketSummary(_bucketManager.Create());
+        }
+
+        private Bucket GetBucket(string bucket)
+        {
+            if (bucket == null) throw new ArgumentNullException("bucket");
+
+            var bkt = _bucketManager.Get(bucket);
+            if (bkt == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+            return bkt;
         }
     }
 }
