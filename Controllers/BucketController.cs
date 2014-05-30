@@ -4,11 +4,20 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using WebRequestReflector.Models;
 
 namespace WebRequestReflector.Controllers
 {
     public class BucketController : ApiController
     {
+        BucketManager _bucketManager;
+
+        public BucketController(BucketManager bucketManager)
+        {
+            if (bucketManager == null) throw new ArgumentNullException("bucketManager");
+            _bucketManager = bucketManager;
+        }
+
         [Route("{bucket:length(16)}")]
         [HttpDelete]
         [HttpGet]
