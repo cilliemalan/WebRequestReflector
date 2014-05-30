@@ -6,7 +6,8 @@ using System.Text;
 
 namespace WebRequestReflector.Models
 {
-    class BucketEntrySummary
+	[Serializable]
+    public class BucketEntrySummary
     {
         public int Index { get; set; }
         public HttpMethod Method { get; set; }
