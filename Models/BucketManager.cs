@@ -13,10 +13,51 @@ namespace WebRequestReflector.Models
         private ObjectCache _cache = new MemoryCache("bucketCache");
 
         public string GenerateBucketId()
-        {
+		{
+			Func<byte, char> MakeVowel = b =>
+			{
+				switch (b % 6)
+				{
+					case 0: return 'a';
+					case 1: return 'e';
+					case 2: return 'o';
+					case 3: return 'u';
+					case 4: return 'i';
+					case 5: return 'y';
+				};
+				return 'A';
+			};
+			Func<byte, char> MakeConsonant = b =>
+			{
+				switch (b % 20)
+				{
+					case 0: return 'b';
+					case 1: return 'c';
+					case 2: return 'd';
+					case 3: return 'f';
+					case 4: return 'g';
+					case 5: return 'h';
+					case 6: return 'j';
+					case 7: return 'k';
+					case 8: return 'l';
+					case 9: return 'm';
+					case 10: return 'n';
+					case 11: return 'p';
+					case 12: return 'q';
+					case 13: return 'r';
+					case 14: return 's';
+					case 15: return 't';
+					case 16: return 'v';
+					case 17: return 'w';
+					case 18: return 'x';
+					case 19: return 'z';
+				};
+				return 'A';
+			};
+
             byte[] randomNumbers = new byte[16];
             _rng.GetBytes(randomNumbers);
-            return new String(randomNumbers.Select(x => (char)((x % 2 == 0 ? (short)'A' : (short)'a') + ((x / 2) % 26))).ToArray());
+			return new String(randomNumbers.Select((x,i) => i % 2 == 0 ? MakeConsonant(x) : MakeVowel(x)).ToArray());
         }
 
         public Bucket Create()
