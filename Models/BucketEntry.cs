@@ -7,6 +7,7 @@ using System.Web;
 
 namespace WebRequestReflector.Models
 {
+	[Serializable]
     public class BucketEntry
     {
         public HttpRequestHeaders Headers { get; set; }
