@@ -310,7 +310,7 @@ namespace WebRequestReflector.Tests
 		}
 
 
-		public static bool HeadersAreEqual(Headers expected, Headers actual)
+		public static bool HeadersAreEqual(List<Header> expected, List<Header> actual)
 		{
 			if (expected == null) return expected == null && actual == null;
 			else
