@@ -95,9 +95,9 @@ namespace WebRequestReflector.Controllers
             return bkt;
         }
 
-		private List<KeyValuePair< string, List<string>>> FixHeaders(HttpHeaders headers)
+		private Headers FixHeaders(HttpHeaders headers)
 		{
-			return headers.Select(x => new KeyValuePair<string, List<string>>(x.Key, x.Value.ToList())).ToList();
+			return new Headers(headers);
 		}
     }
 }

@@ -191,14 +191,14 @@ namespace WebRequestReflector.Tests
 			Assert.AreEqual(summary1.Length, entry1.Contents.Length);
 			Assert.IsTrue(BucketManagerTests.HeadersAreEqual(BucketManagerTests.FixHeaders(request1.Headers), entry1.RequestHeaders));
 			Assert.IsTrue(BucketManagerTests.HeadersAreEqual(BucketManagerTests.FixHeaders(request1.Content.Headers), entry1.ContentHeaders));
-			
+
 			var entry2 = controller.Get(bucket.Id, summary2.Index);
 			Assert.IsNotNull(entry2);
 			Assert.AreEqual(summary2.DateAdded, entry2.DateAdded);
 			Assert.AreEqual(summary2.Method, entry2.Method);
 			Assert.AreEqual(requestData2, entry2.Contents);
 			Assert.AreEqual(summary2.Length, entry2.Contents.Length);
-			Assert.IsTrue(BucketManagerTests.HeadersAreEqual(BucketManagerTests.FixHeaders( request2.Headers), entry2.RequestHeaders));
+			Assert.IsTrue(BucketManagerTests.HeadersAreEqual(BucketManagerTests.FixHeaders(request2.Headers), entry2.RequestHeaders));
 			Assert.IsTrue(BucketManagerTests.HeadersAreEqual(BucketManagerTests.FixHeaders(request2.Content.Headers), entry2.ContentHeaders));
 		}
 
@@ -212,8 +212,8 @@ namespace WebRequestReflector.Tests
 			var requestHeaders = BucketManagerTests.CreateSomeRequestHeaders();
 			var contentHeaders = BucketManagerTests.CreateSomeContentHeaders();
 
-			foreach (var header in requestHeaders.SelectMany(x=> x.Value.Select(y=> new KeyValuePair<string,string>(x.Key, y)))) request.Headers.TryAddWithoutValidation(header.Key, header.Value);
-			foreach (var header in contentHeaders.SelectMany(x => x.Value.Select(y => new KeyValuePair<string, string>(x.Key, y)))) request.Content.Headers.TryAddWithoutValidation(header.Key, header.Value);
+			foreach (var header in requestHeaders.GroupBy(x => x.Key)) request.Headers.TryAddWithoutValidation(header.Key, header.Select(x=>x.Value));
+			foreach (var header in contentHeaders.GroupBy(x => x.Key)) request.Content.Headers.TryAddWithoutValidation(header.Key, header.Select(x => x.Value));
 
 			return request;
 		}

@@ -15,8 +15,8 @@ namespace WebRequestReflector.Models
 	[Serializable]
 	public class BucketEntry
 	{
-		public List<KeyValuePair<string, List<string>>> RequestHeaders { get; set; }
-		public List<KeyValuePair<string, List<string>>> ContentHeaders { get; set; }
+		public Headers RequestHeaders { get; set; }
+		public Headers ContentHeaders { get; set; }
 		public string Method { get; set; }
 		public string Contents { get; set; }
 		public DateTime DateAdded { get; set; }

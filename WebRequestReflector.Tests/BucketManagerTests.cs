@@ -289,8 +289,8 @@ namespace WebRequestReflector.Tests
 					obj.Contents,
 					obj.DateAdded,
 					obj.Method,
-					string.Join("_", obj.RequestHeaders.SelectMany(kvp => kvp.Value.Select(v => new KeyValuePair<string, string>(kvp.Key, v))).Select(x => x.Key + "-" + x.Value)),
-					string.Join("_", obj.ContentHeaders.SelectMany(kvp => kvp.Value.Select(v => new KeyValuePair<string, string>(kvp.Key, v))).Select(x => x.Key + "-" + x.Value))).GetHashCode();
+					obj.RequestHeaders,
+					obj.ContentHeaders).GetHashCode();
 			}
 		}
 
@@ -310,22 +310,19 @@ namespace WebRequestReflector.Tests
 		}
 
 
-		public static bool HeadersAreEqual(List<KeyValuePair<string, List<string>>> expected, List<KeyValuePair<string, List<string>>> actual)
+		public static bool HeadersAreEqual(Headers expected, Headers actual)
 		{
 			if (expected == null) return expected == null && actual == null;
 			else
 			{
-				var kvp_expected = expected.SelectMany(kvp => kvp.Value.Select(v => new KeyValuePair<string, string>(kvp.Key, v)));
-				var kvp_actual = actual.SelectMany(kvp => kvp.Value.Select(v => new KeyValuePair<string, string>(kvp.Key, v)));
-
-				HashSet<KeyValuePair<string, string>> h_expected = new HashSet<KeyValuePair<string, string>>(kvp_expected);
-				HashSet<KeyValuePair<string, string>> h_actual = new HashSet<KeyValuePair<string, string>>(kvp_actual);
+				HashSet<Header> h_expected = new HashSet<Header>(expected);
+				HashSet<Header> h_actual = new HashSet<Header>(actual);
 
 				return h_expected.SetEquals(h_actual);
 			}
 		}
 
-		public static List<KeyValuePair<string, List<string>>> CreateSomeContentHeaders()
+		public static Headers CreateSomeContentHeaders()
 		{
 			HttpContentHeaders headers = CreateHttpContentHeaders();
 			headers.ContentType = new MediaTypeHeaderValue("text/plain");
@@ -336,7 +333,7 @@ namespace WebRequestReflector.Tests
 			return FixHeaders(headers);
 		}
 
-		public static List<KeyValuePair<string, List<string>>> CreateSomeRequestHeaders()
+		public static Headers CreateSomeRequestHeaders()
 		{
 			HttpRequestHeaders headers = CreateHttpRequestHeaders();
 			headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml") { CharSet = "utf-8" });
@@ -396,10 +393,10 @@ namespace WebRequestReflector.Tests
 		}
 
 
-		public static List<KeyValuePair<string, List<string>>> FixHeaders(HttpHeaders headers)
+		public static Headers FixHeaders(HttpHeaders headers)
 		{
 			if (headers == null) return null;
-			return headers.Select(x => new KeyValuePair<string, List<string>>(x.Key, x.Value.ToList())).ToList();
+			return new Headers(headers);
 		}
 	}
 }

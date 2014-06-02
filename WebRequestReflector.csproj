@@ -156,6 +156,8 @@
     <Compile Include="Models\BucketEntrySummary.cs" />
     <Compile Include="Models\BucketManager.cs" />
     <Compile Include="Models\BucketSummary.cs" />
+    <Compile Include="Models\Header.cs" />
+    <Compile Include="Models\Headers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnityResolver.cs" />
   </ItemGroup>
