@@ -38,17 +38,24 @@ namespace WebRequestReflector.Models
 			var content = new ByteArrayContent(new byte[0]);
 			HttpRequestMessage request = new HttpRequestMessage();
 
-			RequestHeaders = request.Headers;
-			ContentHeaders = content.Headers;
 
 			var ieRequestHeaders = (IEnumerable<KeyValuePair<string, IEnumerable<string>>>)info.GetValue("RequestHeaders", typeof(IEnumerable<KeyValuePair<string, IEnumerable<string>>>));
 			var ieContentHeaders = (IEnumerable<KeyValuePair<string, IEnumerable<string>>>)info.GetValue("ContentHeaders", typeof(IEnumerable<KeyValuePair<string, IEnumerable<string>>>));
 
-			foreach (var item in ieRequestHeaders) RequestHeaders.TryAddWithoutValidation(item.Key, item.Value);
-			foreach (var item in ieContentHeaders) ContentHeaders.TryAddWithoutValidation(item.Key, item.Value);
+			if (ieRequestHeaders != null)
+			{
+				RequestHeaders = request.Headers;
+				foreach (var item in ieRequestHeaders) RequestHeaders.TryAddWithoutValidation(item.Key, item.Value);
+			}
+
+			if (ieContentHeaders != null)
+			{
+				ContentHeaders = content.Headers;
+				foreach (var item in ieContentHeaders) ContentHeaders.TryAddWithoutValidation(item.Key, item.Value);
+			}
 
 			var sMethod = (string)info.GetValue("Method", typeof(string));
-			Method = new HttpMethod(sMethod);
+			Method = sMethod != null ? new HttpMethod(sMethod) : null;
 			Contents = (string)info.GetValue("Contents", typeof(string));
 			DateAdded = (DateTimeOffset)info.GetValue("DateAdded", typeof(DateTimeOffset));
 		}
@@ -56,9 +63,9 @@ namespace WebRequestReflector.Models
 		public void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			// Use the AddValue method to specify serialized values.
-			info.AddValue("RequestHeaders", RequestHeaders.ToArray(), typeof(IEnumerable<KeyValuePair<string, IEnumerable<string>>>));
-			info.AddValue("ContentHeaders", ContentHeaders.ToArray(), typeof(IEnumerable<KeyValuePair<string, IEnumerable<string>>>));
-			info.AddValue("Method", Method.ToString(), typeof(string));
+			info.AddValue("RequestHeaders", RequestHeaders != null ? RequestHeaders.ToArray() : null, typeof(IEnumerable<KeyValuePair<string, IEnumerable<string>>>));
+			info.AddValue("ContentHeaders", ContentHeaders != null ? ContentHeaders.ToArray() : null, typeof(IEnumerable<KeyValuePair<string, IEnumerable<string>>>));
+			info.AddValue("Method", Method != null ? Method.ToString() : null, typeof(string));
 			info.AddValue("Contents", Contents, typeof(string));
 			info.AddValue("DateAdded", DateAdded, typeof(DateTimeOffset));
 		}
