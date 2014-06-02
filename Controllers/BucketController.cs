@@ -13,6 +13,11 @@ namespace WebRequestReflector.Controllers
     {
         BucketManager _bucketManager;
 
+		/// <summary>
+		/// Gets or Sets what would have been <see cref="ApiController.Request"/> on <see cref="ApiController"/>.
+		/// </summary>
+		public HttpRequestMessage RequestBase { get { return base.Request; } set { base.Request = value; } }
+
         public BucketController(BucketManager bucketManager)
         {
             if (bucketManager == null) throw new ArgumentNullException("bucketManager");
