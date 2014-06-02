@@ -246,7 +246,7 @@ namespace WebRequestReflector.Tests
 			}
 		}
 
-		private HttpContentHeaders CreateSomeContentHeaders()
+		public static HttpContentHeaders CreateSomeContentHeaders()
 		{
 			HttpContentHeaders headers = CreateHttpContentHeaders();
 			headers.ContentType = new MediaTypeHeaderValue("text/plain");
@@ -257,7 +257,7 @@ namespace WebRequestReflector.Tests
 			return headers;
 		}
 
-		private HttpRequestHeaders CreateSomeRequestHeaders()
+		public static HttpRequestHeaders CreateSomeRequestHeaders()
 		{
 			HttpRequestHeaders headers = CreateHttpRequestHeaders();
 			headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml") { CharSet = "utf-8" });
@@ -272,7 +272,7 @@ namespace WebRequestReflector.Tests
 			return headers;
 		}
 
-		private T SerializeAndDeserialize<T>(T thing)
+		public static T SerializeAndDeserialize<T>(T thing)
 		{
 			BinaryFormatter bf = new BinaryFormatter();
 
@@ -284,13 +284,13 @@ namespace WebRequestReflector.Tests
 			}
 		}
 
-		private static HttpRequestHeaders CreateHttpRequestHeaders()
+		public static HttpRequestHeaders CreateHttpRequestHeaders()
 		{
 			HttpRequestMessage request = new HttpRequestMessage();
 			return request.Headers;
 		}
 
-		private static HttpContentHeaders CreateHttpContentHeaders()
+		public static HttpContentHeaders CreateHttpContentHeaders()
 		{
 			var content = new ByteArrayContent(new byte[0]);
 			return content.Headers;
