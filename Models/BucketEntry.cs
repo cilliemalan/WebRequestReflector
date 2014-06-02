@@ -5,69 +5,22 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Runtime.Serialization;
 using System.Web;
+using System.Xml;
+using System.Xml.Linq;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 
 namespace WebRequestReflector.Models
 {
 	[Serializable]
-	public class BucketEntry : ISerializable
+	public class BucketEntry
 	{
-		[NonSerialized]
-		private HttpRequestHeaders _requestHeaders;
-		[NonSerialized]
-		private HttpContentHeaders _contentHeaders;
-		[NonSerialized]
-		private HttpMethod _method;
-		[NonSerialized]
-		private string _contents;
-		[NonSerialized]
-		private DateTimeOffset _dateAdded;
-
-		public HttpRequestHeaders RequestHeaders { get { return _requestHeaders; } set { _requestHeaders = value; } }
-		public HttpContentHeaders ContentHeaders { get { return _contentHeaders; } set { _contentHeaders = value; } }
-		public HttpMethod Method { get { return _method; } set { _method = value; } }
-		public string Contents { get { return _contents; } set { _contents = value; } }
-		public DateTimeOffset DateAdded { get { return _dateAdded; } set { _dateAdded = value; } }
-
-		public BucketEntry()
-		{
-
-		}
-
-		protected BucketEntry(SerializationInfo info, StreamingContext context)
-		{
-			var content = new ByteArrayContent(new byte[0]);
-			HttpRequestMessage request = new HttpRequestMessage();
+		public List<KeyValuePair<string, List<string>>> RequestHeaders { get; set; }
+		public List<KeyValuePair<string, List<string>>> ContentHeaders { get; set; }
+		public string Method { get; set; }
+		public string Contents { get; set; }
+		public DateTime DateAdded { get; set; }
 
 
-			var ieRequestHeaders = (IEnumerable<KeyValuePair<string, IEnumerable<string>>>)info.GetValue("RequestHeaders", typeof(IEnumerable<KeyValuePair<string, IEnumerable<string>>>));
-			var ieContentHeaders = (IEnumerable<KeyValuePair<string, IEnumerable<string>>>)info.GetValue("ContentHeaders", typeof(IEnumerable<KeyValuePair<string, IEnumerable<string>>>));
-
-			if (ieRequestHeaders != null)
-			{
-				RequestHeaders = request.Headers;
-				foreach (var item in ieRequestHeaders) RequestHeaders.TryAddWithoutValidation(item.Key, item.Value);
-			}
-
-			if (ieContentHeaders != null)
-			{
-				ContentHeaders = content.Headers;
-				foreach (var item in ieContentHeaders) ContentHeaders.TryAddWithoutValidation(item.Key, item.Value);
-			}
-
-			var sMethod = (string)info.GetValue("Method", typeof(string));
-			Method = sMethod != null ? new HttpMethod(sMethod) : null;
-			Contents = (string)info.GetValue("Contents", typeof(string));
-			DateAdded = (DateTimeOffset)info.GetValue("DateAdded", typeof(DateTimeOffset));
-		}
-
-		public void GetObjectData(SerializationInfo info, StreamingContext context)
-		{
-			// Use the AddValue method to specify serialized values.
-			info.AddValue("RequestHeaders", RequestHeaders != null ? RequestHeaders.ToArray() : null, typeof(IEnumerable<KeyValuePair<string, IEnumerable<string>>>));
-			info.AddValue("ContentHeaders", ContentHeaders != null ? ContentHeaders.ToArray() : null, typeof(IEnumerable<KeyValuePair<string, IEnumerable<string>>>));
-			info.AddValue("Method", Method != null ? Method.ToString() : null, typeof(string));
-			info.AddValue("Contents", Contents, typeof(string));
-			info.AddValue("DateAdded", DateAdded, typeof(DateTimeOffset));
-		}
 	}
 }

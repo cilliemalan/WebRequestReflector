@@ -10,9 +10,9 @@ namespace WebRequestReflector.Models
     public class BucketEntrySummary
     {
         public int Index { get; set; }
-        public HttpMethod Method { get; set; }
+        public string Method { get; set; }
         public long Length { get; set; }
-        public DateTimeOffset DateAdded { get; set; }
+        public DateTime DateAdded { get; set; }
 
         public BucketEntrySummary(int index, BucketEntry x)
         {

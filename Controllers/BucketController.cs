@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Http;
 using WebRequestReflector.Models;
@@ -39,10 +40,10 @@ namespace WebRequestReflector.Controllers
             BucketEntry newEntry = new BucketEntry
             {
                 Contents = base.Request.Content != null ?await base.Request.Content.ReadAsStringAsync() : null,
-                RequestHeaders = base.Request.Headers,
-				ContentHeaders = base.Request.Content != null ? base.Request.Content.Headers : null,
-                DateAdded = DateTimeOffset.Now,
-                Method = base.Request.Method
+				RequestHeaders = FixHeaders(base.Request.Headers),
+				ContentHeaders = base.Request.Content != null ? FixHeaders(base.Request.Content.Headers) : null,
+                DateAdded = DateTime.Now,
+                Method = base.Request.Method.ToString()
             };
 
             bkt.Entries.Add(newEntry);
@@ -93,5 +94,10 @@ namespace WebRequestReflector.Controllers
             if (bkt == null) throw new HttpResponseException(HttpStatusCode.NotFound);
             return bkt;
         }
+
+		private List<KeyValuePair< string, List<string>>> FixHeaders(HttpHeaders headers)
+		{
+			return headers.Select(x => new KeyValuePair<string, List<string>>(x.Key, x.Value.ToList())).ToList();
+		}
     }
 }

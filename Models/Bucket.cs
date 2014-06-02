@@ -4,37 +4,33 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web;
+using System.Xml;
+using System.Xml.Linq;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 
 namespace WebRequestReflector.Models
 {
     [Serializable]
-    public class Bucket
+	public class Bucket
     {
-        private string _id;
-        private List<BucketEntry> _entries;
-        private DateTimeOffset _created;
-        private DateTimeOffset _expires;
-
 
 		public Bucket()
+			:this(null)
 		{
-            _id = null;
-            _entries = new List<BucketEntry>();
-            _created = DateTimeOffset.Now;
-            _expires = _created.AddMinutes(5);
 		}
 
-        public Bucket(string id)
-        {
-            _id = id;
-            _entries = new List<BucketEntry>();
-            _created = DateTimeOffset.Now;
-            _expires = _created.AddMinutes(5);
-        }
+		public Bucket(string id)
+		{
+			Id = id;
+			Entries = new List<BucketEntry>();
+			Created = DateTime.Now;
+			Expires = Created.AddMinutes(5);
+		}
 
-        public string Id { get { return _id; } protected set { _id = value; } }
-        public List<BucketEntry> Entries { get { return _entries; } protected set { _entries = value; } }
-        public DateTimeOffset Created { get { return _created; } protected set { _created = value; } }
-        public DateTimeOffset Expires { get { return _expires; } protected set { _expires = value; } }
-    }
+		public string Id { get; set; }
+		public List<BucketEntry> Entries { get; set; }
+		public DateTime Created { get; set; }
+		public DateTime Expires { get; set; }
+	}
 }

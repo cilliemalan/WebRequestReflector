@@ -7,6 +7,9 @@ using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Collections.Generic;
+using System.Net.Http.Formatting;
+using System.Xml.Serialization;
+using System.Web.Script.Serialization;
 
 namespace WebRequestReflector.Tests
 {
@@ -66,12 +69,12 @@ namespace WebRequestReflector.Tests
 		}
 
 		[TestMethod]
-		public void SerializeTest1()
+		public void SerializeTest1Binary()
 		{
 			var bucket1 = bucketManager.Create();
 			Assert.IsNotNull(bucket1);
 
-			var bucket2 = SerializeAndDeserialize(bucket1);
+			var bucket2 = SerializeAndDeserializeBinary(bucket1);
 			Assert.IsNotNull(bucket2);
 			Assert.AreEqual(bucket1.Created, bucket2.Created);
 			Assert.AreEqual(bucket1.Expires, bucket2.Expires);
@@ -79,12 +82,12 @@ namespace WebRequestReflector.Tests
 		}
 
 		[TestMethod]
-		public void SerializeTest2()
+		public void SerializeTest2Binary()
 		{
 			var bucketEntry1 = new BucketEntry
 			{
-				DateAdded = DateTimeOffset.Now.AddSeconds(-2),
-				Method = HttpMethod.Get,
+				DateAdded = DateTime.Now.AddSeconds(-2),
+				Method = HttpMethod.Get.ToString(),
 				ContentHeaders = CreateSomeContentHeaders(),
 				RequestHeaders = CreateSomeRequestHeaders(),
 				Contents = "blahblahblah"
@@ -94,7 +97,7 @@ namespace WebRequestReflector.Tests
 			Assert.IsNotNull(bucketEntry1.ContentHeaders);
 			Assert.IsNotNull(bucketEntry1.RequestHeaders);
 
-			var bucketEntry2 = SerializeAndDeserialize(bucketEntry1);
+			var bucketEntry2 = SerializeAndDeserializeBinary(bucketEntry1);
 
 			Assert.IsNotNull(bucketEntry2);
 			Assert.IsNotNull(bucketEntry2.ContentHeaders);
@@ -107,15 +110,15 @@ namespace WebRequestReflector.Tests
 		}
 
 		[TestMethod]
-		public void SerializeTest3()
+		public void SerializeTest3Binary()
 		{
 			var bucket1 = bucketManager.Create();
 			Assert.IsNotNull(bucket1);
 
 			var bucketEntry1 = new BucketEntry
 			{
-				DateAdded = DateTimeOffset.Now.AddSeconds(-2),
-				Method = HttpMethod.Get,
+				DateAdded = DateTime.Now.AddSeconds(-2),
+				Method = HttpMethod.Get.ToString(),
 				ContentHeaders = CreateSomeContentHeaders(),
 				RequestHeaders = CreateSomeRequestHeaders(),
 				Contents = "blahblahblah"
@@ -123,7 +126,83 @@ namespace WebRequestReflector.Tests
 
 			bucket1.Entries.Add(bucketEntry1);
 
-			var bucket2 = SerializeAndDeserialize(bucket1);
+			var bucket2 = SerializeAndDeserializeBinary(bucket1);
+			Assert.IsNotNull(bucket2);
+			Assert.AreEqual(bucket1.Created, bucket2.Created);
+			Assert.AreEqual(bucket1.Expires, bucket2.Expires);
+			Assert.AreEqual(bucket1.Entries.Count, bucket2.Entries.Count);
+			Assert.AreEqual(bucket1.Id, bucket2.Id);
+
+			var bucketEntry2 = bucket2.Entries[0];
+			Assert.IsNotNull(bucketEntry2);
+			Assert.IsNotNull(bucketEntry2.ContentHeaders);
+			Assert.IsNotNull(bucketEntry2.RequestHeaders);
+			Assert.AreEqual(bucketEntry1.DateAdded, bucketEntry2.DateAdded);
+			Assert.AreEqual(bucketEntry1.Method, bucketEntry2.Method);
+			Assert.AreEqual(bucketEntry1.Contents, bucketEntry2.Contents);
+			Assert.IsTrue(HeadersAreEqual(bucketEntry1.ContentHeaders, bucketEntry2.ContentHeaders));
+			Assert.IsTrue(HeadersAreEqual(bucketEntry1.RequestHeaders, bucketEntry2.RequestHeaders));
+		}
+
+		[TestMethod]
+		public void SerializeTest1Xml()
+		{
+			var bucket1 = bucketManager.Create();
+			Assert.IsNotNull(bucket1);
+
+			var bucket2 = SerializeAndDeserializeXml(bucket1);
+			Assert.IsNotNull(bucket2);
+			Assert.AreEqual(bucket1.Created, bucket2.Created);
+			Assert.AreEqual(bucket1.Expires, bucket2.Expires);
+			Assert.AreEqual(bucket1.Id, bucket2.Id);
+		}
+
+		[TestMethod]
+		public void SerializeTest2Xml()
+		{
+			var bucketEntry1 = new BucketEntry
+			{
+				DateAdded = DateTime.Now.AddSeconds(-2),
+				Method = HttpMethod.Get.ToString(),
+				ContentHeaders = CreateSomeContentHeaders(),
+				RequestHeaders = CreateSomeRequestHeaders(),
+				Contents = "blahblahblah"
+			};
+
+			Assert.IsNotNull(bucketEntry1);
+			Assert.IsNotNull(bucketEntry1.ContentHeaders);
+			Assert.IsNotNull(bucketEntry1.RequestHeaders);
+
+			var bucketEntry2 = SerializeAndDeserializeXml(bucketEntry1);
+
+			Assert.IsNotNull(bucketEntry2);
+			Assert.IsNotNull(bucketEntry2.ContentHeaders);
+			Assert.IsNotNull(bucketEntry2.RequestHeaders);
+			Assert.AreEqual(bucketEntry1.DateAdded, bucketEntry2.DateAdded);
+			Assert.AreEqual(bucketEntry1.Method, bucketEntry2.Method);
+			Assert.AreEqual(bucketEntry1.Contents, bucketEntry2.Contents);
+			Assert.IsTrue(HeadersAreEqual(bucketEntry1.ContentHeaders, bucketEntry2.ContentHeaders));
+			Assert.IsTrue(HeadersAreEqual(bucketEntry1.RequestHeaders, bucketEntry2.RequestHeaders));
+		}
+
+		[TestMethod]
+		public void SerializeTest3Xml()
+		{
+			var bucket1 = bucketManager.Create();
+			Assert.IsNotNull(bucket1);
+
+			var bucketEntry1 = new BucketEntry
+			{
+				DateAdded = DateTime.Now.AddSeconds(-2),
+				Method = HttpMethod.Get.ToString(),
+				ContentHeaders = CreateSomeContentHeaders(),
+				RequestHeaders = CreateSomeRequestHeaders(),
+				Contents = "blahblahblah"
+			};
+
+			bucket1.Entries.Add(bucketEntry1);
+
+			var bucket2 = SerializeAndDeserializeXml(bucket1);
 			Assert.IsNotNull(bucket2);
 			Assert.AreEqual(bucket1.Created, bucket2.Created);
 			Assert.AreEqual(bucket1.Expires, bucket2.Expires);
@@ -147,13 +226,13 @@ namespace WebRequestReflector.Tests
 			var bucket1 = bucketManager.Create();
 			Assert.IsNotNull(bucket1);
 
-			var bucket2 = SerializeAndDeserialize(bucket1);
+			var bucket2 = SerializeAndDeserializeBinary(bucket1);
 			Assert.IsNotNull(bucket2);
 
 			BucketEntry bucketEntry1 = new BucketEntry
 			{
-				DateAdded = DateTimeOffset.Now.AddSeconds(-2),
-				Method = HttpMethod.Get,
+				DateAdded = DateTime.Now.AddSeconds(-2),
+				Method = HttpMethod.Get.ToString(),
 				ContentHeaders = CreateSomeContentHeaders(),
 				RequestHeaders = CreateSomeRequestHeaders(),
 				Contents = "blahblahblah"
@@ -161,8 +240,8 @@ namespace WebRequestReflector.Tests
 
 			BucketEntry bucketEntry2 = new BucketEntry
 			{
-				DateAdded = DateTimeOffset.Now.AddSeconds(-1),
-				Method = HttpMethod.Get,
+				DateAdded = DateTime.Now.AddSeconds(-1),
+				Method = HttpMethod.Get.ToString(),
 				ContentHeaders = CreateSomeContentHeaders(),
 				RequestHeaders = CreateSomeRequestHeaders(),
 				Contents = "blahblahblah2"
@@ -231,7 +310,7 @@ namespace WebRequestReflector.Tests
 		}
 
 
-		public static bool HeadersAreEqual(HttpHeaders expected, HttpHeaders actual)
+		public static bool HeadersAreEqual(List<KeyValuePair<string, List<string>>> expected, List<KeyValuePair<string, List<string>>> actual)
 		{
 			if (expected == null) return expected == null && actual == null;
 			else
@@ -246,7 +325,7 @@ namespace WebRequestReflector.Tests
 			}
 		}
 
-		public static HttpContentHeaders CreateSomeContentHeaders()
+		public static List<KeyValuePair<string, List<string>>> CreateSomeContentHeaders()
 		{
 			HttpContentHeaders headers = CreateHttpContentHeaders();
 			headers.ContentType = new MediaTypeHeaderValue("text/plain");
@@ -254,10 +333,10 @@ namespace WebRequestReflector.Tests
 			headers.ContentDisposition = new ContentDispositionHeaderValue("attachment") { FileName = "whatever.txt" };
 			headers.LastModified = DateTimeOffset.Now;
 
-			return headers;
+			return FixHeaders(headers);
 		}
 
-		public static HttpRequestHeaders CreateSomeRequestHeaders()
+		public static List<KeyValuePair<string, List<string>>> CreateSomeRequestHeaders()
 		{
 			HttpRequestHeaders headers = CreateHttpRequestHeaders();
 			headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml") { CharSet = "utf-8" });
@@ -269,10 +348,10 @@ namespace WebRequestReflector.Tests
 			headers.CacheControl = new CacheControlHeaderValue() { Public = true };
 			headers.Referrer = new Uri("http://www.google.co.za");
 
-			return headers;
+			return FixHeaders(headers);
 		}
 
-		public static T SerializeAndDeserialize<T>(T thing)
+		public static T SerializeAndDeserializeBinary<T>(T thing)
 		{
 			BinaryFormatter bf = new BinaryFormatter();
 
@@ -282,6 +361,26 @@ namespace WebRequestReflector.Tests
 				ms.Seek(0, SeekOrigin.Begin);
 				return (T)bf.Deserialize(ms);
 			}
+		}
+
+		public static T SerializeAndDeserializeXml<T>(T thing)
+		{
+			XmlSerializer xss = new XmlSerializer(typeof(T));
+
+			using (MemoryStream ms = new MemoryStream())
+			{
+				xss.Serialize(ms, thing);
+				ms.Seek(0, SeekOrigin.Begin);
+				return (T)xss.Deserialize(ms);
+			}
+		}
+
+		public static T SerializeAndDeserializeJson<T>(T thing)
+		{
+			JavaScriptSerializer jss = new JavaScriptSerializer();
+
+			string s = jss.Serialize(thing);
+			return jss.Deserialize<T>(s);
 		}
 
 		public static HttpRequestHeaders CreateHttpRequestHeaders()
@@ -294,6 +393,13 @@ namespace WebRequestReflector.Tests
 		{
 			var content = new ByteArrayContent(new byte[0]);
 			return content.Headers;
+		}
+
+
+		public static List<KeyValuePair<string, List<string>>> FixHeaders(HttpHeaders headers)
+		{
+			if (headers == null) return null;
+			return headers.Select(x => new KeyValuePair<string, List<string>>(x.Key, x.Value.ToList())).ToList();
 		}
 	}
 }

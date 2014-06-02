@@ -94,7 +94,7 @@ namespace WebRequestReflector.Tests
 
 			BucketEntrySummary summary = await controller.Request(bucket.Id);
 			Assert.IsNotNull(summary);
-			Assert.AreEqual(controller.RequestBase.Method, summary.Method);
+			Assert.AreEqual(controller.RequestBase.Method.ToString(), summary.Method);
 			Assert.AreEqual(requestData.Length, summary.Length);
 			Assert.AreEqual(0, summary.Index);
 		}
@@ -111,7 +111,7 @@ namespace WebRequestReflector.Tests
 
 			BucketEntrySummary summary1 = await controller.Request(bucket.Id);
 			Assert.IsNotNull(summary1);
-			Assert.AreEqual(controller.RequestBase.Method, summary1.Method);
+			Assert.AreEqual(controller.RequestBase.Method.ToString(), summary1.Method);
 			Assert.AreEqual(requestData1.Length, summary1.Length);
 			Assert.AreEqual(0, summary1.Index);
 
@@ -123,7 +123,7 @@ namespace WebRequestReflector.Tests
 
 			BucketEntrySummary summary2 = await controller.Request(bucket.Id);
 			Assert.IsNotNull(summary2);
-			Assert.AreEqual(controller.RequestBase.Method, summary2.Method);
+			Assert.AreEqual(controller.RequestBase.Method.ToString(), summary2.Method);
 			Assert.AreEqual(requestData2.Length, summary2.Length);
 			Assert.AreEqual(1, summary2.Index);
 		}
@@ -140,7 +140,7 @@ namespace WebRequestReflector.Tests
 
 			BucketEntrySummary summary = await controller.Request(bucket.Id);
 			Assert.IsNotNull(summary);
-			Assert.AreEqual(controller.RequestBase.Method, summary.Method);
+			Assert.AreEqual(controller.RequestBase.Method.ToString(), summary.Method);
 			Assert.AreEqual(requestData.Length, summary.Length);
 			Assert.AreEqual(0, summary.Index);
 
@@ -150,8 +150,8 @@ namespace WebRequestReflector.Tests
 			Assert.AreEqual(summary.Method, entry.Method);
 			Assert.AreEqual(requestData, entry.Contents);
 			Assert.AreEqual(summary.Length, entry.Contents.Length);
-			Assert.IsTrue(BucketManagerTests.HeadersAreEqual(controller.RequestBase.Headers, entry.RequestHeaders));
-			Assert.IsTrue(BucketManagerTests.HeadersAreEqual(controller.RequestBase.Content.Headers, entry.ContentHeaders));
+			Assert.IsTrue(BucketManagerTests.HeadersAreEqual(BucketManagerTests.FixHeaders(controller.RequestBase.Headers), entry.RequestHeaders));
+			Assert.IsTrue(BucketManagerTests.HeadersAreEqual(BucketManagerTests.FixHeaders(controller.RequestBase.Content.Headers), entry.ContentHeaders));
 		}
 
 		[TestMethod]
@@ -166,7 +166,7 @@ namespace WebRequestReflector.Tests
 
 			BucketEntrySummary summary1 = await controller.Request(bucket.Id);
 			Assert.IsNotNull(summary1);
-			Assert.AreEqual(controller.RequestBase.Method, summary1.Method);
+			Assert.AreEqual(controller.RequestBase.Method.ToString(), summary1.Method);
 			Assert.AreEqual(requestData1.Length, summary1.Length);
 			Assert.AreEqual(0, summary1.Index);
 
@@ -178,7 +178,7 @@ namespace WebRequestReflector.Tests
 
 			BucketEntrySummary summary2 = await controller.Request(bucket.Id);
 			Assert.IsNotNull(summary2);
-			Assert.AreEqual(controller.RequestBase.Method, summary2.Method);
+			Assert.AreEqual(controller.RequestBase.Method.ToString(), summary2.Method);
 			Assert.AreEqual(requestData2.Length, summary2.Length);
 			Assert.AreEqual(1, summary2.Index);
 
@@ -189,8 +189,8 @@ namespace WebRequestReflector.Tests
 			Assert.AreEqual(summary1.Method, entry1.Method);
 			Assert.AreEqual(requestData1, entry1.Contents);
 			Assert.AreEqual(summary1.Length, entry1.Contents.Length);
-			Assert.IsTrue(BucketManagerTests.HeadersAreEqual(request1.Headers, entry1.RequestHeaders));
-			Assert.IsTrue(BucketManagerTests.HeadersAreEqual(request1.Content.Headers, entry1.ContentHeaders));
+			Assert.IsTrue(BucketManagerTests.HeadersAreEqual(BucketManagerTests.FixHeaders(request1.Headers), entry1.RequestHeaders));
+			Assert.IsTrue(BucketManagerTests.HeadersAreEqual(BucketManagerTests.FixHeaders(request1.Content.Headers), entry1.ContentHeaders));
 			
 			var entry2 = controller.Get(bucket.Id, summary2.Index);
 			Assert.IsNotNull(entry2);
@@ -198,8 +198,8 @@ namespace WebRequestReflector.Tests
 			Assert.AreEqual(summary2.Method, entry2.Method);
 			Assert.AreEqual(requestData2, entry2.Contents);
 			Assert.AreEqual(summary2.Length, entry2.Contents.Length);
-			Assert.IsTrue(BucketManagerTests.HeadersAreEqual(request2.Headers, entry2.RequestHeaders));
-			Assert.IsTrue(BucketManagerTests.HeadersAreEqual(request2.Content.Headers, entry2.ContentHeaders));
+			Assert.IsTrue(BucketManagerTests.HeadersAreEqual(BucketManagerTests.FixHeaders( request2.Headers), entry2.RequestHeaders));
+			Assert.IsTrue(BucketManagerTests.HeadersAreEqual(BucketManagerTests.FixHeaders(request2.Content.Headers), entry2.ContentHeaders));
 		}
 
 		private HttpRequestMessage CreateRequest()
