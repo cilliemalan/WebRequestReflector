@@ -128,6 +128,80 @@ namespace WebRequestReflector.Tests
 			Assert.AreEqual(1, summary2.Index);
 		}
 
+		[TestMethod]
+		public async Task GetEntryTest()
+		{
+			BucketSummary bucket = controller.Create();
+			Assert.IsNotNull(bucket);
+			Assert.IsNotNull(bucket.Id);
+
+			controller.RequestBase = CreateRequest();
+			string requestData = await controller.RequestBase.Content.ReadAsStringAsync();
+
+			BucketEntrySummary summary = await controller.Request(bucket.Id);
+			Assert.IsNotNull(summary);
+			Assert.AreEqual(controller.RequestBase.Method, summary.Method);
+			Assert.AreEqual(requestData.Length, summary.Length);
+			Assert.AreEqual(0, summary.Index);
+
+			var entry = controller.Get(bucket.Id, summary.Index);
+			Assert.IsNotNull(entry);
+			Assert.AreEqual(summary.DateAdded, entry.DateAdded);
+			Assert.AreEqual(summary.Method, entry.Method);
+			Assert.AreEqual(requestData, entry.Contents);
+			Assert.AreEqual(summary.Length, entry.Contents.Length);
+			Assert.IsTrue(BucketManagerTests.HeadersAreEqual(controller.RequestBase.Headers, entry.RequestHeaders));
+			Assert.IsTrue(BucketManagerTests.HeadersAreEqual(controller.RequestBase.Content.Headers, entry.ContentHeaders));
+		}
+
+		[TestMethod]
+		public async Task GetMultipleEntryTest()
+		{
+			BucketSummary bucket = controller.Create();
+			Assert.IsNotNull(bucket);
+			Assert.IsNotNull(bucket.Id);
+
+			var request1 = controller.RequestBase = CreateRequest();
+			string requestData1 = await controller.RequestBase.Content.ReadAsStringAsync();
+
+			BucketEntrySummary summary1 = await controller.Request(bucket.Id);
+			Assert.IsNotNull(summary1);
+			Assert.AreEqual(controller.RequestBase.Method, summary1.Method);
+			Assert.AreEqual(requestData1.Length, summary1.Length);
+			Assert.AreEqual(0, summary1.Index);
+
+
+			var request2 = controller.RequestBase = CreateRequest();
+			controller.RequestBase.Method = HttpMethod.Put;
+			controller.RequestBase.Content = new StringContent("Hello, again, World");
+			string requestData2 = await controller.RequestBase.Content.ReadAsStringAsync();
+
+			BucketEntrySummary summary2 = await controller.Request(bucket.Id);
+			Assert.IsNotNull(summary2);
+			Assert.AreEqual(controller.RequestBase.Method, summary2.Method);
+			Assert.AreEqual(requestData2.Length, summary2.Length);
+			Assert.AreEqual(1, summary2.Index);
+
+
+			var entry1 = controller.Get(bucket.Id, summary1.Index);
+			Assert.IsNotNull(entry1);
+			Assert.AreEqual(summary1.DateAdded, entry1.DateAdded);
+			Assert.AreEqual(summary1.Method, entry1.Method);
+			Assert.AreEqual(requestData1, entry1.Contents);
+			Assert.AreEqual(summary1.Length, entry1.Contents.Length);
+			Assert.IsTrue(BucketManagerTests.HeadersAreEqual(request1.Headers, entry1.RequestHeaders));
+			Assert.IsTrue(BucketManagerTests.HeadersAreEqual(request1.Content.Headers, entry1.ContentHeaders));
+			
+			var entry2 = controller.Get(bucket.Id, summary2.Index);
+			Assert.IsNotNull(entry2);
+			Assert.AreEqual(summary2.DateAdded, entry2.DateAdded);
+			Assert.AreEqual(summary2.Method, entry2.Method);
+			Assert.AreEqual(requestData2, entry2.Contents);
+			Assert.AreEqual(summary2.Length, entry2.Contents.Length);
+			Assert.IsTrue(BucketManagerTests.HeadersAreEqual(request2.Headers, entry2.RequestHeaders));
+			Assert.IsTrue(BucketManagerTests.HeadersAreEqual(request2.Content.Headers, entry2.ContentHeaders));
+		}
+
 		private HttpRequestMessage CreateRequest()
 		{
 			var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost/whatever")
