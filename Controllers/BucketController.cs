@@ -33,8 +33,9 @@ namespace WebRequestReflector.Controllers
 
             BucketEntry newEntry = new BucketEntry
             {
-                Contents = await base.Request.Content.ReadAsStringAsync(),
-                Headers = base.Request.Headers,
+                Contents = base.Request.Content != null ?await base.Request.Content.ReadAsStringAsync() : null,
+                RequestHeaders = base.Request.Headers,
+				ContentHeaders = base.Request.Content != null ? base.Request.Content.Headers : null,
                 DateAdded = DateTimeOffset.Now,
                 Method = base.Request.Method
             };
