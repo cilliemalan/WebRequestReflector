@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Web;
 
 namespace WebRequestReflector.Models
@@ -8,7 +9,12 @@ namespace WebRequestReflector.Models
 	[Serializable]
 	public class Headers : List<Header>
 	{
-		public Headers(System.Net.Http.Headers.HttpHeaders headers)
+		public Headers()
+		{
+
+		}
+
+		public Headers(HttpHeaders headers)
 		{
 			foreach(var kvp in headers)
 			{

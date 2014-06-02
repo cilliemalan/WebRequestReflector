@@ -11,6 +11,11 @@ namespace WebRequestReflector.Models
 		public string Key { get; set; }
 		public string Value { get; set; }
 
+		public Header()
+		{
+
+		}
+
 		public Header(string key, string value)
 		{
 			Key = key;
