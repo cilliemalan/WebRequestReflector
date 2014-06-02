@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Net.Http.Formatting;
 using System.Xml.Serialization;
 using System.Web.Script.Serialization;
+using System.Threading.Tasks;
 
 namespace WebRequestReflector.Tests
 {
@@ -69,12 +70,12 @@ namespace WebRequestReflector.Tests
 		}
 
 		[TestMethod]
-		public void SerializeTest1Binary()
+		public async Task SerializeTest1Binary()
 		{
 			var bucket1 = bucketManager.Create();
 			Assert.IsNotNull(bucket1);
 
-			var bucket2 = SerializeAndDeserializeBinary(bucket1);
+			var bucket2 = await SerializeAndDeserializeBinary(bucket1);
 			Assert.IsNotNull(bucket2);
 			Assert.AreEqual(bucket1.Created, bucket2.Created);
 			Assert.AreEqual(bucket1.Expires, bucket2.Expires);
@@ -82,7 +83,7 @@ namespace WebRequestReflector.Tests
 		}
 
 		[TestMethod]
-		public void SerializeTest2Binary()
+		public async Task SerializeTest2Binary()
 		{
 			var bucketEntry1 = new BucketEntry
 			{
@@ -97,7 +98,7 @@ namespace WebRequestReflector.Tests
 			Assert.IsNotNull(bucketEntry1.ContentHeaders);
 			Assert.IsNotNull(bucketEntry1.RequestHeaders);
 
-			var bucketEntry2 = SerializeAndDeserializeBinary(bucketEntry1);
+			var bucketEntry2 = await SerializeAndDeserializeBinary(bucketEntry1);
 
 			Assert.IsNotNull(bucketEntry2);
 			Assert.IsNotNull(bucketEntry2.ContentHeaders);
@@ -110,7 +111,7 @@ namespace WebRequestReflector.Tests
 		}
 
 		[TestMethod]
-		public void SerializeTest3Binary()
+		public async Task SerializeTest3Binary()
 		{
 			var bucket1 = bucketManager.Create();
 			Assert.IsNotNull(bucket1);
@@ -126,7 +127,7 @@ namespace WebRequestReflector.Tests
 
 			bucket1.Entries.Add(bucketEntry1);
 
-			var bucket2 = SerializeAndDeserializeBinary(bucket1);
+			var bucket2 = await SerializeAndDeserializeBinary(bucket1);
 			Assert.IsNotNull(bucket2);
 			Assert.AreEqual(bucket1.Created, bucket2.Created);
 			Assert.AreEqual(bucket1.Expires, bucket2.Expires);
@@ -145,12 +146,12 @@ namespace WebRequestReflector.Tests
 		}
 
 		[TestMethod]
-		public void SerializeTest1Xml()
+		public async Task SerializeTest1Xml()
 		{
 			var bucket1 = bucketManager.Create();
 			Assert.IsNotNull(bucket1);
 
-			var bucket2 = SerializeAndDeserializeXml(bucket1);
+			var bucket2 = await SerializeAndDeserializeXml(bucket1);
 			Assert.IsNotNull(bucket2);
 			Assert.AreEqual(bucket1.Created, bucket2.Created);
 			Assert.AreEqual(bucket1.Expires, bucket2.Expires);
@@ -158,7 +159,7 @@ namespace WebRequestReflector.Tests
 		}
 
 		[TestMethod]
-		public void SerializeTest2Xml()
+		public async Task SerializeTest2Xml()
 		{
 			var bucketEntry1 = new BucketEntry
 			{
@@ -173,7 +174,7 @@ namespace WebRequestReflector.Tests
 			Assert.IsNotNull(bucketEntry1.ContentHeaders);
 			Assert.IsNotNull(bucketEntry1.RequestHeaders);
 
-			var bucketEntry2 = SerializeAndDeserializeXml(bucketEntry1);
+			var bucketEntry2 = await SerializeAndDeserializeXml(bucketEntry1);
 
 			Assert.IsNotNull(bucketEntry2);
 			Assert.IsNotNull(bucketEntry2.ContentHeaders);
@@ -186,7 +187,7 @@ namespace WebRequestReflector.Tests
 		}
 
 		[TestMethod]
-		public void SerializeTest3Xml()
+		public async Task SerializeTest3Xml()
 		{
 			var bucket1 = bucketManager.Create();
 			Assert.IsNotNull(bucket1);
@@ -202,7 +203,7 @@ namespace WebRequestReflector.Tests
 
 			bucket1.Entries.Add(bucketEntry1);
 
-			var bucket2 = SerializeAndDeserializeXml(bucket1);
+			var bucket2 = await SerializeAndDeserializeXml(bucket1);
 			Assert.IsNotNull(bucket2);
 			Assert.AreEqual(bucket1.Created, bucket2.Created);
 			Assert.AreEqual(bucket1.Expires, bucket2.Expires);
@@ -221,12 +222,89 @@ namespace WebRequestReflector.Tests
 		}
 
 		[TestMethod]
-		public void EntriesTest()
+		public async Task SerializeTest1Json()
 		{
 			var bucket1 = bucketManager.Create();
 			Assert.IsNotNull(bucket1);
 
-			var bucket2 = SerializeAndDeserializeBinary(bucket1);
+			var bucket2 = await SerializeAndDeserializeJson(bucket1);
+			Assert.IsNotNull(bucket2);
+			Assert.IsTrue(Math.Abs((bucket1.Created - bucket2.Created).TotalSeconds) < 0.1);
+			Assert.IsTrue(Math.Abs((bucket1.Expires - bucket2.Expires).TotalSeconds) < 0.1);
+			Assert.AreEqual(bucket1.Id, bucket2.Id);
+		}
+
+		[TestMethod]
+		public async Task SerializeTest2Json()
+		{
+			var bucketEntry1 = new BucketEntry
+			{
+				DateAdded = DateTime.Now.AddSeconds(-2),
+				Method = HttpMethod.Get.ToString(),
+				ContentHeaders = CreateSomeContentHeaders(),
+				RequestHeaders = CreateSomeRequestHeaders(),
+				Contents = "blahblahblah"
+			};
+
+			Assert.IsNotNull(bucketEntry1);
+			Assert.IsNotNull(bucketEntry1.ContentHeaders);
+			Assert.IsNotNull(bucketEntry1.RequestHeaders);
+
+			var bucketEntry2 = await SerializeAndDeserializeJson(bucketEntry1);
+
+			Assert.IsNotNull(bucketEntry2);
+			Assert.IsNotNull(bucketEntry2.ContentHeaders);
+			Assert.IsNotNull(bucketEntry2.RequestHeaders);
+			Assert.IsTrue(Math.Abs((bucketEntry1.DateAdded - bucketEntry2.DateAdded).TotalSeconds) < 0.1);
+			Assert.AreEqual(bucketEntry1.DateAdded, bucketEntry2.DateAdded);
+			Assert.AreEqual(bucketEntry1.Method, bucketEntry2.Method);
+			Assert.AreEqual(bucketEntry1.Contents, bucketEntry2.Contents);
+			Assert.IsTrue(HeadersAreEqual(bucketEntry1.ContentHeaders, bucketEntry2.ContentHeaders));
+			Assert.IsTrue(HeadersAreEqual(bucketEntry1.RequestHeaders, bucketEntry2.RequestHeaders));
+		}
+
+		[TestMethod]
+		public async Task SerializeTest3Json()
+		{
+			var bucket1 = bucketManager.Create();
+			Assert.IsNotNull(bucket1);
+
+			var bucketEntry1 = new BucketEntry
+			{
+				DateAdded = DateTime.Now.AddSeconds(-2),
+				Method = HttpMethod.Get.ToString(),
+				ContentHeaders = CreateSomeContentHeaders(),
+				RequestHeaders = CreateSomeRequestHeaders(),
+				Contents = "blahblahblah"
+			};
+
+			bucket1.Entries.Add(bucketEntry1);
+
+			var bucket2 = await SerializeAndDeserializeJson(bucket1);
+			Assert.IsNotNull(bucket2);
+			Assert.IsTrue(Math.Abs((bucket1.Created - bucket2.Created).TotalSeconds) < 0.1);
+			Assert.IsTrue(Math.Abs((bucket1.Expires - bucket2.Expires).TotalSeconds) < 0.1);
+			Assert.AreEqual(bucket1.Entries.Count, bucket2.Entries.Count);
+			Assert.AreEqual(bucket1.Id, bucket2.Id);
+
+			var bucketEntry2 = bucket2.Entries[0];
+			Assert.IsNotNull(bucketEntry2);
+			Assert.IsNotNull(bucketEntry2.ContentHeaders);
+			Assert.IsNotNull(bucketEntry2.RequestHeaders);
+			Assert.IsTrue(Math.Abs((bucketEntry1.DateAdded - bucketEntry2.DateAdded).TotalSeconds) < 0.1);
+			Assert.AreEqual(bucketEntry1.Method, bucketEntry2.Method);
+			Assert.AreEqual(bucketEntry1.Contents, bucketEntry2.Contents);
+			Assert.IsTrue(HeadersAreEqual(bucketEntry1.ContentHeaders, bucketEntry2.ContentHeaders));
+			Assert.IsTrue(HeadersAreEqual(bucketEntry1.RequestHeaders, bucketEntry2.RequestHeaders));
+		}
+
+		[TestMethod]
+		public async Task EntriesTest()
+		{
+			var bucket1 = bucketManager.Create();
+			Assert.IsNotNull(bucket1);
+
+			var bucket2 = await SerializeAndDeserializeBinary(bucket1);
 			Assert.IsNotNull(bucket2);
 
 			BucketEntry bucketEntry1 = new BucketEntry
@@ -348,7 +426,7 @@ namespace WebRequestReflector.Tests
 			return FixHeaders(headers);
 		}
 
-		public static T SerializeAndDeserializeBinary<T>(T thing)
+		public static async Task<T> SerializeAndDeserializeBinary<T>(T thing)
 		{
 			BinaryFormatter bf = new BinaryFormatter();
 
@@ -356,28 +434,28 @@ namespace WebRequestReflector.Tests
 			{
 				bf.Serialize(ms, thing);
 				ms.Seek(0, SeekOrigin.Begin);
-				return (T)bf.Deserialize(ms);
+				return await Task.FromResult((T)bf.Deserialize(ms));
 			}
 		}
 
-		public static T SerializeAndDeserializeXml<T>(T thing)
+		public static async Task<T> SerializeAndDeserializeXml<T>(T thing)
 		{
-			XmlSerializer xss = new XmlSerializer(typeof(T));
+			return await SerializeAndDeserialize(thing, new XmlMediaTypeFormatter());
+		}
 
+		public static async Task<T> SerializeAndDeserializeJson<T>(T thing)
+		{
+			return await SerializeAndDeserialize(thing, new JsonMediaTypeFormatter());
+		}
+
+		public static async Task<T> SerializeAndDeserialize<T>(T thing, MediaTypeFormatter formatter)
+		{
 			using (MemoryStream ms = new MemoryStream())
 			{
-				xss.Serialize(ms, thing);
+				await formatter.WriteToStreamAsync(typeof(T), thing, ms, null, null);
 				ms.Seek(0, SeekOrigin.Begin);
-				return (T)xss.Deserialize(ms);
+				return (T)await formatter.ReadFromStreamAsync(typeof(T), ms, null, null);
 			}
-		}
-
-		public static T SerializeAndDeserializeJson<T>(T thing)
-		{
-			JavaScriptSerializer jss = new JavaScriptSerializer();
-
-			string s = jss.Serialize(thing);
-			return jss.Deserialize<T>(s);
 		}
 
 		public static HttpRequestHeaders CreateHttpRequestHeaders()
