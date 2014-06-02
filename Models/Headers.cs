@@ -6,7 +6,6 @@ using System.Web;
 
 namespace WebRequestReflector.Models
 {
-	[Serializable]
 	public class Headers : List<Header>
 	{
 		public Headers()

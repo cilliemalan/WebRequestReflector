@@ -12,14 +12,13 @@ using System.Xml.Serialization;
 
 namespace WebRequestReflector.Models
 {
-	[Serializable]
 	public class BucketEntry
 	{
 		public List<Header> RequestHeaders { get; set; }
 		public List<Header> ContentHeaders { get; set; }
 		public string Method { get; set; }
 		public string Contents { get; set; }
-		public DateTime DateAdded { get; set; }
+		public DateTimeOffset DateAdded { get; set; }
 
 
 	}

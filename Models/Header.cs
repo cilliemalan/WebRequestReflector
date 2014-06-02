@@ -5,7 +5,6 @@ using System.Web;
 
 namespace WebRequestReflector.Models
 {
-	[Serializable]
 	public class Header : IEquatable<Header>, IComparable<Header>
 	{
 		public string Key { get; set; }

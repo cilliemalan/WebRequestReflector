@@ -11,7 +11,6 @@ using System.Xml.Serialization;
 
 namespace WebRequestReflector.Models
 {
-    [Serializable]
 	public class Bucket
     {
 
@@ -24,13 +23,13 @@ namespace WebRequestReflector.Models
 		{
 			Id = id;
 			Entries = new List<BucketEntry>();
-			Created = DateTime.Now;
+			Created = DateTimeOffset.Now;
 			Expires = Created.AddMinutes(5);
 		}
 
 		public string Id { get; set; }
 		public List<BucketEntry> Entries { get; set; }
-		public DateTime Created { get; set; }
-		public DateTime Expires { get; set; }
+		public DateTimeOffset Created { get; set; }
+		public DateTimeOffset Expires { get; set; }
 	}
 }

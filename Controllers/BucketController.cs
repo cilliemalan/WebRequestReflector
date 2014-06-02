@@ -42,7 +42,7 @@ namespace WebRequestReflector.Controllers
                 Contents = base.Request.Content != null ?await base.Request.Content.ReadAsStringAsync() : null,
 				RequestHeaders = FixHeaders(base.Request.Headers),
 				ContentHeaders = base.Request.Content != null ? FixHeaders(base.Request.Content.Headers) : null,
-                DateAdded = DateTime.Now,
+				DateAdded = DateTimeOffset.Now,
                 Method = base.Request.Method.ToString()
             };
 
