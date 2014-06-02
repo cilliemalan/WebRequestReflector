@@ -15,6 +15,15 @@ namespace WebRequestReflector.Models
         private DateTimeOffset _created;
         private DateTimeOffset _expires;
 
+
+		public Bucket()
+		{
+            _id = null;
+            _entries = new List<BucketEntry>();
+            _created = DateTimeOffset.Now;
+            _expires = _created.AddMinutes(5);
+		}
+
         public Bucket(string id)
         {
             _id = id;
