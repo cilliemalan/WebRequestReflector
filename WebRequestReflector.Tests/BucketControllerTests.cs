@@ -27,8 +27,8 @@ namespace WebRequestReflector.Tests
 			Assert.AreNotEqual("", summary.Id);
 			Assert.IsNotNull(summary.Entries);
 			Assert.AreEqual(0, summary.Entries.Count);
-			Assert.IsTrue(Math.Abs((summary.Created - now).TotalSeconds) < 0.01);
-			Assert.IsTrue(Math.Abs((summary.Expires - now).TotalMinutes - 5) < 0.01);
+			Assert.IsTrue(Math.Abs((summary.Created - now).TotalSeconds) < 1);
+			Assert.IsTrue(Math.Abs((summary.Expires - now).TotalMinutes - 5) < 1);
 		}
 
 		[TestMethod]

@@ -29,8 +29,8 @@ namespace WebRequestReflector.Tests
 			Assert.IsNotNull(bucket);
 			Assert.IsNotNull(bucket.Id);
 			Assert.AreNotEqual("", bucket.Id);
-			Assert.IsTrue(Math.Abs((bucket.Created - now).TotalSeconds) < 0.01);
-			Assert.IsTrue(Math.Abs((bucket.Expires - now).TotalMinutes - 5) < 0.01);
+			Assert.IsTrue(Math.Abs((bucket.Created - now).TotalSeconds) < 1);
+			Assert.IsTrue(Math.Abs((bucket.Expires - now).TotalMinutes - 5) < 1);
 		}
 
 		[TestMethod]
@@ -154,8 +154,8 @@ namespace WebRequestReflector.Tests
 
 			var bucket2 = await SerializeAndDeserializeJson(bucket1);
 			Assert.IsNotNull(bucket2);
-			Assert.IsTrue(Math.Abs((bucket1.Created - bucket2.Created).TotalSeconds) < 0.1);
-			Assert.IsTrue(Math.Abs((bucket1.Expires - bucket2.Expires).TotalSeconds) < 0.1);
+			Assert.IsTrue(Math.Abs((bucket1.Created - bucket2.Created).TotalSeconds) < 1);
+			Assert.IsTrue(Math.Abs((bucket1.Expires - bucket2.Expires).TotalSeconds) < 1);
 			Assert.AreEqual(bucket1.Id, bucket2.Id);
 		}
 
@@ -180,7 +180,7 @@ namespace WebRequestReflector.Tests
 			Assert.IsNotNull(bucketEntry2);
 			Assert.IsNotNull(bucketEntry2.ContentHeaders);
 			Assert.IsNotNull(bucketEntry2.RequestHeaders);
-			Assert.IsTrue(Math.Abs((bucketEntry1.DateAdded - bucketEntry2.DateAdded).TotalSeconds) < 0.1);
+			Assert.IsTrue(Math.Abs((bucketEntry1.DateAdded - bucketEntry2.DateAdded).TotalSeconds) < 1);
 			Assert.AreEqual(bucketEntry1.DateAdded, bucketEntry2.DateAdded);
 			Assert.AreEqual(bucketEntry1.Method, bucketEntry2.Method);
 			Assert.AreEqual(bucketEntry1.Contents, bucketEntry2.Contents);
@@ -207,8 +207,8 @@ namespace WebRequestReflector.Tests
 
 			var bucket2 = await SerializeAndDeserializeJson(bucket1);
 			Assert.IsNotNull(bucket2);
-			Assert.IsTrue(Math.Abs((bucket1.Created - bucket2.Created).TotalSeconds) < 0.1);
-			Assert.IsTrue(Math.Abs((bucket1.Expires - bucket2.Expires).TotalSeconds) < 0.1);
+			Assert.IsTrue(Math.Abs((bucket1.Created - bucket2.Created).TotalSeconds) < 1);
+			Assert.IsTrue(Math.Abs((bucket1.Expires - bucket2.Expires).TotalSeconds) < 1);
 			Assert.AreEqual(bucket1.Entries.Count, bucket2.Entries.Count);
 			Assert.AreEqual(bucket1.Id, bucket2.Id);
 
@@ -216,7 +216,7 @@ namespace WebRequestReflector.Tests
 			Assert.IsNotNull(bucketEntry2);
 			Assert.IsNotNull(bucketEntry2.ContentHeaders);
 			Assert.IsNotNull(bucketEntry2.RequestHeaders);
-			Assert.IsTrue(Math.Abs((bucketEntry1.DateAdded - bucketEntry2.DateAdded).TotalSeconds) < 0.1);
+			Assert.IsTrue(Math.Abs((bucketEntry1.DateAdded - bucketEntry2.DateAdded).TotalSeconds) < 1);
 			Assert.AreEqual(bucketEntry1.Method, bucketEntry2.Method);
 			Assert.AreEqual(bucketEntry1.Contents, bucketEntry2.Contents);
 			Assert.IsTrue(HeadersAreEqual(bucketEntry1.ContentHeaders, bucketEntry2.ContentHeaders));
