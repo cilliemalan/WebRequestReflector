@@ -17,6 +17,9 @@ namespace WebRequestReflector
 
             // Web API routes
             config.MapHttpAttributeRoutes();
+
+			config.Formatters.JsonFormatter.UseDataContractJsonSerializer = false;
+			config.Formatters.XmlFormatter.UseXmlSerializer = true;
         }
     }
 }
