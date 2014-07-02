@@ -92,8 +92,8 @@
       <Project>{6f85ab06-f14a-4d3f-801f-c5c06bb8a320}</Project>
       <Name>WebRequestReflector.Client</Name>
     </ProjectReference>
-    <ProjectReference Include="..\WebRequestReflector.csproj">
-      <Project>{45c7cd01-4f68-4051-9dc1-1b722677faf3}</Project>
+    <ProjectReference Include="..\WebRequestReflector\WebRequestReflector.csproj">
+      <Project>{073ded28-5daf-4a27-b4d0-2ecd61b82461}</Project>
       <Name>WebRequestReflector</Name>
     </ProjectReference>
   </ItemGroup>
