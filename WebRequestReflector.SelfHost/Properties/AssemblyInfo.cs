@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("WebRequestReflector.SelfHost")]
-[assembly: AssemblyDescription("A simple tool to test systems that make requests to other servers without expecting a specific response (e.g. Web Hooks).")]
+[assembly: AssemblyDescription("Allows OWIN self hosting of WebRequestReflector.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Cillié Malan")]
 [assembly: AssemblyProduct("WebRequestReflector.SelfHost")]
 [assembly: AssemblyCopyright("Copyright Cillié Malan ©  2014")]
 [assembly: AssemblyTrademark("")]

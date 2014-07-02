@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("WebRequestReflector")]
 [assembly: AssemblyDescription("A simple tool to test systems that make requests to other servers without expecting a specific response (e.g. Web Hooks).")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Cillié Malan")]
 [assembly: AssemblyProduct("WebRequestReflector")]
 [assembly: AssemblyCopyright("Copyright Cillié Malan ©  2014")]
 [assembly: AssemblyTrademark("")]
