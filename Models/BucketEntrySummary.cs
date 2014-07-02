@@ -13,6 +13,11 @@ namespace WebRequestReflector.Models
         public long Length { get; set; }
 		public DateTime DateAdded { get; set; }
 
+		public BucketEntrySummary()
+		{
+
+		}
+
         public BucketEntrySummary(int index, BucketEntry x)
         {
             Index = index;

@@ -20,6 +20,9 @@ namespace WebRequestReflector.Models
 		public string Contents { get; set; }
 		public DateTime DateAdded { get; set; }
 
+		public BucketEntry()
+		{
 
+		}
 	}
 }
