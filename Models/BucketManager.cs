@@ -9,6 +9,9 @@ namespace WebRequestReflector.Models
 {
     public class BucketManager : IDisposable
     {
+		private static Lazy<BucketManager> _default = new Lazy<BucketManager>();
+		public static BucketManager Default { get { return _default.Value; } }
+
         private RandomNumberGenerator _rng = new RNGCryptoServiceProvider();
         private ObjectCache _cache = new MemoryCache("bucketCache");
 

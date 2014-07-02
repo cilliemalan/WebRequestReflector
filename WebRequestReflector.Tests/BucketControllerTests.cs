@@ -15,7 +15,7 @@ namespace WebRequestReflector.Tests
 	[TestClass]
 	public class BucketControllerTests
 	{
-		private BucketController controller = new BucketController(new BucketManager());
+		private BucketController controller = new BucketController();
 
 		[TestMethod]
 		public void ControllerCreateTest()

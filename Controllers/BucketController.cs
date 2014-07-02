@@ -12,17 +12,15 @@ namespace WebRequestReflector.Controllers
 {
     public class BucketController : ApiController
     {
-        BucketManager _bucketManager;
+		private BucketManager _bucketManager = BucketManager.Default;
 
 		/// <summary>
 		/// Gets or Sets what would have been <see cref="ApiController.Request"/> on <see cref="ApiController"/>.
 		/// </summary>
 		public HttpRequestMessage RequestBase { get { return base.Request; } set { base.Request = value; } }
 
-        public BucketController(BucketManager bucketManager)
+        public BucketController()
         {
-            if (bucketManager == null) throw new ArgumentNullException("bucketManager");
-            _bucketManager = bucketManager;
         }
 
         [Route("{bucket:length(16)}")]
