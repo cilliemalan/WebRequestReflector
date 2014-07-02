@@ -81,7 +81,7 @@
     <Compile Include="BucketControllerTests.cs" />
     <Compile Include="BucketManagerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SelfHostTest.cs" />
+    <Compile Include="SelfHostTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\WebRequestReflector.SelfHost\WebRequestReflector.SelfHost.csproj">
