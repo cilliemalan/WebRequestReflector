@@ -82,6 +82,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="WebRequestReflector.SelfHost.nuspec" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WebRequestReflector\WebRequestReflector.csproj">
