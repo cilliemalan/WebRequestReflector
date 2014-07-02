@@ -18,7 +18,7 @@ namespace WebRequestReflector.Models
 		public List<Header> ContentHeaders { get; set; }
 		public string Method { get; set; }
 		public string Contents { get; set; }
-		public DateTimeOffset DateAdded { get; set; }
+		public DateTime DateAdded { get; set; }
 
 
 	}

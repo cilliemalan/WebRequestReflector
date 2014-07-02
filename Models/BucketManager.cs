@@ -86,7 +86,7 @@ namespace WebRequestReflector.Models
             else
             {
                 Bucket bucket = item.Value as Bucket;
-                if (bucket == null || bucket.Expires <= DateTimeOffset.Now)
+                if (bucket == null || bucket.Expires <= DateTime.UtcNow)
                 {
                     _cache.Remove(id);
                     return null;

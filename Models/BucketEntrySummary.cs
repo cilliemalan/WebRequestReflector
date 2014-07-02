@@ -11,7 +11,7 @@ namespace WebRequestReflector.Models
         public int Index { get; set; }
         public string Method { get; set; }
         public long Length { get; set; }
-		public DateTimeOffset DateAdded { get; set; }
+		public DateTime DateAdded { get; set; }
 
         public BucketEntrySummary(int index, BucketEntry x)
         {

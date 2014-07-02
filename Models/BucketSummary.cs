@@ -9,8 +9,8 @@ namespace WebRequestReflector.Models
     {
         private string _id;
         private IList<BucketEntrySummary> _entries;
-		private DateTimeOffset _created;
-		private DateTimeOffset _expires;
+		private DateTime _created;
+		private DateTime _expires;
 
         public BucketSummary(Bucket bucket)
         {
@@ -22,7 +22,7 @@ namespace WebRequestReflector.Models
 
         public string Id { get { return _id; } protected set { _id = value; } }
         public IList<BucketEntrySummary> Entries { get { return _entries; } protected set { _entries = value; } }
-		public DateTimeOffset Created { get { return _created; } protected set { _created = value; } }
-		public DateTimeOffset Expires { get { return _expires; } protected set { _expires = value; } }
+		public DateTime Created { get { return _created; } protected set { _created = value; } }
+		public DateTime Expires { get { return _expires; } protected set { _expires = value; } }
     }
 }

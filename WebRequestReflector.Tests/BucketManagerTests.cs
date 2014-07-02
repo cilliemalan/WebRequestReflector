@@ -23,7 +23,7 @@ namespace WebRequestReflector.Tests
 		[TestMethod]
 		public void CreateTest()
 		{
-			DateTimeOffset now = DateTimeOffset.Now;
+			DateTime now = DateTime.UtcNow;
 			var bucket = bucketManager.Create();
 
 			Assert.IsNotNull(bucket);
@@ -88,7 +88,7 @@ namespace WebRequestReflector.Tests
 		{
 			var bucketEntry1 = new BucketEntry
 			{
-				DateAdded = DateTimeOffset.Now.AddSeconds(-2),
+				DateAdded = DateTime.UtcNow.AddSeconds(-2),
 				Method = HttpMethod.Get.ToString(),
 				ContentHeaders = CreateSomeContentHeaders(),
 				RequestHeaders = CreateSomeRequestHeaders(),
@@ -119,7 +119,7 @@ namespace WebRequestReflector.Tests
 
 			var bucketEntry1 = new BucketEntry
 			{
-				DateAdded = DateTimeOffset.Now.AddSeconds(-2),
+				DateAdded = DateTime.UtcNow.AddSeconds(-2),
 				Method = HttpMethod.Get.ToString(),
 				ContentHeaders = CreateSomeContentHeaders(),
 				RequestHeaders = CreateSomeRequestHeaders(),
@@ -164,7 +164,7 @@ namespace WebRequestReflector.Tests
 		{
 			var bucketEntry1 = new BucketEntry
 			{
-				DateAdded = DateTimeOffset.Now.AddSeconds(-2),
+				DateAdded = DateTime.UtcNow.AddSeconds(-2),
 				Method = HttpMethod.Get.ToString(),
 				ContentHeaders = CreateSomeContentHeaders(),
 				RequestHeaders = CreateSomeRequestHeaders(),
@@ -196,7 +196,7 @@ namespace WebRequestReflector.Tests
 
 			var bucketEntry1 = new BucketEntry
 			{
-				DateAdded = DateTimeOffset.Now.AddSeconds(-2),
+				DateAdded = DateTime.UtcNow.AddSeconds(-2),
 				Method = HttpMethod.Get.ToString(),
 				ContentHeaders = CreateSomeContentHeaders(),
 				RequestHeaders = CreateSomeRequestHeaders(),
@@ -234,7 +234,7 @@ namespace WebRequestReflector.Tests
 
 			BucketEntry bucketEntry1 = new BucketEntry
 			{
-				DateAdded = DateTimeOffset.Now.AddSeconds(-2),
+				DateAdded = DateTime.UtcNow.AddSeconds(-2),
 				Method = HttpMethod.Get.ToString(),
 				ContentHeaders = CreateSomeContentHeaders(),
 				RequestHeaders = CreateSomeRequestHeaders(),
@@ -243,7 +243,7 @@ namespace WebRequestReflector.Tests
 
 			BucketEntry bucketEntry2 = new BucketEntry
 			{
-				DateAdded = DateTimeOffset.Now.AddSeconds(-1),
+				DateAdded = DateTime.UtcNow.AddSeconds(-1),
 				Method = HttpMethod.Get.ToString(),
 				ContentHeaders = CreateSomeContentHeaders(),
 				RequestHeaders = CreateSomeRequestHeaders(),
@@ -329,9 +329,9 @@ namespace WebRequestReflector.Tests
 		{
 			HttpContentHeaders headers = CreateHttpContentHeaders();
 			headers.ContentType = new MediaTypeHeaderValue("text/plain");
-			headers.Expires = DateTimeOffset.Now.AddDays(1);
+			headers.Expires = DateTime.UtcNow.AddDays(1);
 			headers.ContentDisposition = new ContentDispositionHeaderValue("attachment") { FileName = "whatever.txt" };
-			headers.LastModified = DateTimeOffset.Now;
+			headers.LastModified = DateTime.UtcNow;
 
 			return FixHeaders(headers);
 		}

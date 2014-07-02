@@ -20,7 +20,7 @@ namespace WebRequestReflector.Tests
 		[TestMethod]
 		public void ControllerCreateTest()
 		{
-			DateTimeOffset now = DateTimeOffset.Now;
+			DateTime now = DateTime.UtcNow;
 			BucketSummary summary = controller.Create();
 			Assert.IsNotNull(summary);
 			Assert.IsNotNull(summary.Id);
