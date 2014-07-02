@@ -18,28 +18,24 @@ namespace WebRequestReflector.Tests
 		public const string HostUrl = "http://localhost:9967/";
 
 		[TestMethod]
-		public async Task SelfHostTest()
+		public void SelfHostTest()
 		{
-			HttpSelfHostConfiguration config = new HttpSelfHostConfiguration(HostUrl);
-			config.HostNameComparisonMode = HostNameComparisonMode.Exact;
-			WebRequestReflectorSelfHost wrrsh = new WebRequestReflectorSelfHost(config);
+			WebRequestReflectorSelfHost wrrsh = new WebRequestReflectorSelfHost(HostUrl);
 
 			Assert.IsNotNull(wrrsh);
 
-			await wrrsh.StartAsync();
-			await wrrsh.StopAsync();
+			wrrsh.Start();
+			wrrsh.Stop();
 		}
 		
 		[TestMethod]
 		public async Task SelfHostPingTest()
 		{
-			HttpSelfHostConfiguration config = new HttpSelfHostConfiguration(HostUrl);
-			config.HostNameComparisonMode = HostNameComparisonMode.Exact;
-			WebRequestReflectorSelfHost wrrsh = new WebRequestReflectorSelfHost(config);
+			WebRequestReflectorSelfHost wrrsh = new WebRequestReflectorSelfHost(HostUrl);
 
 			Assert.IsNotNull(wrrsh);
 
-			await wrrsh.StartAsync();
+			wrrsh.Start();
 
 			using(HttpClient client = new HttpClient())
 			{
@@ -52,7 +48,7 @@ namespace WebRequestReflector.Tests
 				Assert.AreEqual("application/xml", response.Content.Headers.ContentType.MediaType);
 			}
 
-			await wrrsh.StopAsync();
+			wrrsh.Stop();
 		}
 	}
 }
