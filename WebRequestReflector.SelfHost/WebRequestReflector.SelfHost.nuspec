@@ -11,8 +11,13 @@
 		<!--<iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>-->
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<description>$description$</description>
-		<releaseNotes>Initial release</releaseNotes>
+		<releaseNotes>Fixed dependency problem</releaseNotes>
 		<copyright>Copyright 2014</copyright>
 		<tags></tags>
+		<dependencies>
+			<dependency id="Microsoft.AspNet.WebApi.OwinSelfHost" version="5.2.0" />
+			<dependency id="Microsoft.Owin.Cors" version="2.1.0" />
+			<dependency id="WebRequestReflector" version="1.0.0" />
+		</dependencies>
 	</metadata>
 </package>
